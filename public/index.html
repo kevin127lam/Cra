@@ -32,6 +32,7 @@
     $(() => {
       const canvas = $("#myCanvas")[0];
       const ctx = canvas.getContext("2d");
+      let word = '';
 
       // create canvas element that takes the whole body of html page
       canvas.width = window.innerWidth;
@@ -51,6 +52,23 @@
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText("Launch", canvas.width/ 2, 75);
+
+      function getWordFromServer() {
+        fetch('/random')
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.text();
+          })
+          .then(newWord => {
+            word = newWord;
+            console.log(word);
+          })
+          .catch(error => {
+            console.error('There was a problem with the fetch operation:', error);
+          });
+      }
     });
   </script>
   <script src="js/vendor/jquery.min.js" crossorigin="anonymous"></script>
