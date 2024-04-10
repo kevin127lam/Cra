@@ -23,7 +23,7 @@
 </head>
 
 <body>
-  <canvas id="myCanvas" style="border:1px solid black;" width="1200" height="600">
+  <canvas id="myCanvas" style="border:1px solid black;">
   </canvas>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" crossorigin="anonymous"></script>
@@ -33,136 +33,25 @@
       const canvas = $("#myCanvas")[0];
       const ctx = canvas.getContext("2d");
 
-      let x = y = width = height = 0;
-      // Draw a filled rectangle
-      x = 10;
-      y = 20;
-      width = 90;
-      height = 100;
-      ctx.fillStyle = "red";
-      ctx.fillRect(x, y, width, height);
-      ctx.strokeStyle = "green";
-      ctx.lineWidth = 5;
-      ctx.strokeRect(x, y, width, height);
+      // create canvas element that takes the whole body of html page
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
 
-      // Draw a line
-      x = 150;
-      y = 10;
-      ctx.moveTo(x, y); // Set the start point
-      let x1 = 150;
-      let y1 = 50;
-      ctx.lineTo(x1, y1); // Set the end point
-      ctx.lineWidth = 10;
-      ctx.strokeStyle = "blue";
-      ctx.lineCap = "round";
-      ctx.stroke(); // Draws the line
+      //draw launch button
+      const launchButtonWidth = 150;
+      const launchButtonHeight = 75;
+      const launchButtonX = (canvas.width - launchButtonWidth) / 2;
+      const launchButtonY = 40;
 
-      // Draw a Shape
-      x = 300;
-      y = 20;
-      ctx.moveTo(x, y); // Set the start point
-      ctx.lineTo(x + 20, y + 40); // Set the end point
-      ctx.lineTo(x - 20, y + 40); // Set the end point
-      ctx.closePath(); // Set the end point
-      ctx.stroke(); // Draws the line
-      ctx.fillStyle = "red";
-      ctx.fill();
+      ctx.fillStyle = 'blue';
+      ctx.fillRect((canvas.width - 150) / 2, 40, 150, 75);
 
-
-      // Draw an arc/circle
-      ctx.beginPath();
-      x = 75
-      y = 200
-      let radius = 50
-      let startAngle = 0
-      let endAngle = Math.PI / 2
-      ctx.arc(x, y, radius, startAngle, endAngle); // Clockwise, Radians
-      ctx.stroke();
-
-      x = 400
-      ctx.beginPath();
-      ctx.moveTo(x + 20, 20);
-      // Create a horizontal line
-      ctx.lineTo(x + 100, 20);
-      // Create an arc
-      ctx.arcTo(x + 150, 20, x + 150, 70, 50);
-      // Create a vertical line
-      ctx.lineTo(x + 150, 120);
-      ctx.stroke();
-
-      // Clear a rectangle
-      x = 15;
-      y = 25;
-      width = 20;
-      height = 10;
-      ctx.clearRect(x, y, width, height);
-
-      // Use an alpha channel
-      ctx.fillStyle = "rgb(0 255 0 / 50%)";
-      ctx.strokeStyle = "rgb(0 0 255 / 50%)";
-      x = 25;
-      y = 35;
-      ctx.fillRect(x, y, width, height);
-      ctx.strokeRect(x, y, width, height);
-
-      // Use a linear gradient
-      x0 = 0; y0 = 0; x1 = 200; y1 = 0;
-      const grd1 = ctx.createLinearGradient(x0, y0, x1, y1);
-      grd1.addColorStop(0, "red");
-      grd1.addColorStop(0.33, "green");
-      grd1.addColorStop(0.66, "blue");
-
-      ctx.fillStyle = grd1;
-      ctx.fillRect(10, 300, 100, 350);
-
-      // Use a radial gradient
-      x0 = 480; y0 = 525; r0 = 20; x1 = 460; y1 = 545; r1 = 90;
-      const grd2 = ctx.createRadialGradient(x0, y0, r0, x1, y1, r1);
-      grd2.addColorStop(0, "red");
-      grd2.addColorStop(0.33, "green");
-      grd2.addColorStop(0.66, "blue");
-
-      ctx.fillStyle = grd2;
-      ctx.fillRect(400, 450, 150, 150);
-
-      // Draw Text
-      ctx.font = "30px Comic Sans MS";
-      ctx.fillStyle = "red";
-      ctx.strokeStyle = "green"
-      ctx.textAlign = "center";
-      ctx.fillText("Hello World", canvas.width / 2, canvas.height / 2 - 60);
-      ctx.lineWidth = 2;
-      ctx.strokeText("Goodbye World", canvas.width / 2, canvas.height / 2 - 30);
-
-      // Draw Image
-      const url = "https://www.w3schools.com/graphics/pic_the_scream.jpg"
-      const img = new Image();
-      img.src = url;
-      img.onload = () => { ctx.drawImage(img, 750, 10); }
-
-      // Use fill
-      ctx.beginPath();
-      ctx.rect(120, 300, 150, 100);
-      ctx.fillStyle = "indigo";
-      ctx.fill();
-
-      // Draw a cubic Bézier curve
-      ctx.beginPath();
-      x = 800
-      y = 300
-      ctx.moveTo(x, y);
-      ctx.bezierCurveTo(x + 20, y + 100, x + 200, y + 100, x + 200, y + 250);
-      ctx.stroke();
-
-      // Draw a quadratic Bézier curve
-      ctx.beginPath();
-      x = 600
-      y = 400
-      ctx.moveTo(x, y);
-      ctx.quadraticCurveTo(x + 20, y + 100, x + 200, y + 20);
-      ctx.stroke();
-
-    })
+      ctx.fillStyle = 'black'; // Text color
+      ctx.font = '30px Arial';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText("Launch", canvas.width/ 2, 75);
+    });
   </script>
   <script src="js/vendor/jquery.min.js" crossorigin="anonymous"></script>
   <script src="js/vendor/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
