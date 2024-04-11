@@ -40,7 +40,7 @@
       let words = []; // Array to hold word objects
       let word = '';
 
-      
+
       function launchButton() {
         // Draw launch button
         const launchButtonWidth = 150;
@@ -61,8 +61,8 @@
       }
 
       function drawBoxes(word) {
-        // Draw the word rectangle
-        ctx.fillStyle = '#8ba888'; // word color
+        // Draw the word rectangle with the stored color
+        ctx.fillStyle = word.color;
         ctx.fillRect(word.x, word.y, 200, 100);
 
         // Draw the text on the word
@@ -91,15 +91,22 @@
       }
 
       function createBox(word) {
+        /*https://stackoverflow.com/questions/23861481/randomize-rgb-in-html5-canvas-with-a-new-value-for-each-fillrect-using-javascrip*/
+        var cr = 'rgb(' +
+          Math.floor(Math.random() * 256) + ',' +
+          Math.floor(Math.random() * 256) + ',' +
+          Math.floor(Math.random() * 256) + ')';
+
         const button = {
           word: word,
           //spawns word at random positions
-          x: Math.random() * (canvas.width - 200),
-          y: Math.random() * (canvas.height - 100),
+          x: canvas.width - 500,
+          y: canvas.height - 905,
 
           //words spawn with random initial directions
           dx: Math.random() * 2 - 1, // Random horizontal velocity between -1 and 1
-          dy: Math.random() * 2 - 1 // Random vertical velocity between -1 and 1
+          dy: Math.random() * 2 - 1, // Random vertical velocity between -1 and 1
+          color: cr // Store the random color
         };
         words.push(button);
       }
