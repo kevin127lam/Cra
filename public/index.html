@@ -40,13 +40,33 @@
       let words = []; // Array to hold word objects
       let word = '';
 
+      
+      function launchButton() {
+        // Draw launch button
+        const launchButtonWidth = 150;
+        const launchButtonHeight = 75;
+        const launchButtonX = (canvas.width - launchButtonWidth) / 2;
+        const launchButtonY = 40;
+
+        // Draw the button rectangle
+        ctx.fillStyle = '#44624a'; // Button color
+        ctx.fillRect(launchButtonX, launchButtonY, launchButtonWidth, launchButtonHeight);
+
+        // Draw the text on the button
+        ctx.fillStyle = '#f1ebe1'; // Text color
+        ctx.font = '30px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText("Launch", launchButtonX + launchButtonWidth / 2, launchButtonY + launchButtonHeight / 2);
+      }
+
       function drawBoxes(word) {
         // Draw the word rectangle
-        ctx.fillStyle = 'blue'; // word color
+        ctx.fillStyle = '#8ba888'; // word color
         ctx.fillRect(word.x, word.y, 200, 100);
 
         // Draw the text on the word
-        ctx.fillStyle = 'white'; // Text color
+        ctx.fillStyle = '#f1ebe1'; // Text color
         ctx.font = '30px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -73,16 +93,19 @@
       function createBox(word) {
         const button = {
           word: word,
+          //spawns word at random positions
           x: Math.random() * (canvas.width - 200),
           y: Math.random() * (canvas.height - 100),
+
+          //words spawn with random initial directions
           dx: Math.random() * 2 - 1, // Random horizontal velocity between -1 and 1
           dy: Math.random() * 2 - 1 // Random vertical velocity between -1 and 1
         };
         words.push(button);
       }
 
-      function movewords() {
-        // Clear canvas
+      function moveWords() {
+        // this fixed an issue where the box had a permanant trail
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         launchButton();
         // Move and draw each word
@@ -90,7 +113,7 @@
           word.x += word.dx;
           word.y += word.dy;
 
-          // Check for collision with the canvas edges
+          // Check for collision with the canvas edges, inspired by bouncingballs.htm
           if (word.x < 0 || word.x + 200 > canvas.width) {
             word.dx = -word.dx; // Reverse horizontal velocity on collision
           }
@@ -101,29 +124,10 @@
           drawBoxes(word); // Draw word with updated position
         });
 
-        requestAnimationFrame(movewords);
+        requestAnimationFrame(moveWords);
       }
 
-      function launchButton() {
-        // Draw launch button
-        const launchButtonWidth = 150;
-        const launchButtonHeight = 75;
-        const launchButtonX = (canvas.width - launchButtonWidth) / 2;
-        const launchButtonY = 40;
-
-        // Draw the button rectangle
-        ctx.fillStyle = 'blue'; // Button color
-        ctx.fillRect(launchButtonX, launchButtonY, launchButtonWidth, launchButtonHeight);
-
-        // Draw the text on the button
-        ctx.fillStyle = 'white'; // Text color
-        ctx.font = '30px Arial';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText("Launch", launchButtonX + launchButtonWidth / 2, launchButtonY + launchButtonHeight / 2);
-      }
-
-      // Add event listener to the canvas
+      // Add event listener for the button
       canvas.addEventListener('click', function (event) {
         // Get the click coordinates relative to the canvas
         const x = event.offsetX;
@@ -138,11 +142,7 @@
           getWordFromServer(); // Trigger the AJAX call to fetch a new word
         }
       });
-
-      // Draw launch button initially
-      launchButton();
-
-      movewords(); // Start moving the words
+      moveWords(); // Start moving the words
     });
   </script>
   <script src="js/vendor/jquery.min.js" crossorigin="anonymous"></script>
