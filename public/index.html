@@ -32,26 +32,26 @@
     $(() => {
       const canvas = $("#myCanvas")[0];
       const ctx = canvas.getContext("2d");
-      let word = '';
 
-      // create canvas element that takes the whole body of html page
+      // Set canvas dimensions
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
 
-      //draw launch button
-      const launchButtonWidth = 150;
-      const launchButtonHeight = 75;
-      const launchButtonX = (canvas.width - launchButtonWidth) / 2;
-      const launchButtonY = 40;
+      let words = []; // Array to hold word objects
+      let word = '';
 
-      ctx.fillStyle = 'blue';
-      ctx.fillRect((canvas.width - 150) / 2, 40, 150, 75);
+      function drawBoxes(word) {
+        // Draw the word rectangle
+        ctx.fillStyle = 'blue'; // word color
+        ctx.fillRect(word.x, word.y, 200, 100);
 
-      ctx.fillStyle = 'black'; // Text color
-      ctx.font = '30px Arial';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText("Launch", canvas.width/ 2, 75);
+        // Draw the text on the word
+        ctx.fillStyle = 'white'; // Text color
+        ctx.font = '30px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(word.word, word.x + 100, word.y + 50);
+      }
 
       function getWordFromServer() {
         fetch('/random')
@@ -63,12 +63,86 @@
           })
           .then(newWord => {
             word = newWord;
-            console.log(word);
+            createBox(word);
           })
           .catch(error => {
             console.error('There was a problem with the fetch operation:', error);
           });
       }
+
+      function createBox(word) {
+        const button = {
+          word: word,
+          x: Math.random() * (canvas.width - 200),
+          y: Math.random() * (canvas.height - 100),
+          dx: Math.random() * 2 - 1, // Random horizontal velocity between -1 and 1
+          dy: Math.random() * 2 - 1 // Random vertical velocity between -1 and 1
+        };
+        words.push(button);
+      }
+
+      function movewords() {
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        launchButton();
+        // Move and draw each word
+        words.forEach(word => {
+          word.x += word.dx;
+          word.y += word.dy;
+
+          // Check for collision with the canvas edges
+          if (word.x < 0 || word.x + 200 > canvas.width) {
+            word.dx = -word.dx; // Reverse horizontal velocity on collision
+          }
+          if (word.y < 0 || word.y + 100 > canvas.height) {
+            word.dy = -word.dy; // Reverse vertical velocity on collision
+          }
+
+          drawBoxes(word); // Draw word with updated position
+        });
+
+        requestAnimationFrame(movewords);
+      }
+
+      function launchButton() {
+        // Draw launch button
+        const launchButtonWidth = 150;
+        const launchButtonHeight = 75;
+        const launchButtonX = (canvas.width - launchButtonWidth) / 2;
+        const launchButtonY = 40;
+
+        // Draw the button rectangle
+        ctx.fillStyle = 'blue'; // Button color
+        ctx.fillRect(launchButtonX, launchButtonY, launchButtonWidth, launchButtonHeight);
+
+        // Draw the text on the button
+        ctx.fillStyle = 'white'; // Text color
+        ctx.font = '30px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText("Launch", launchButtonX + launchButtonWidth / 2, launchButtonY + launchButtonHeight / 2);
+      }
+
+      // Add event listener to the canvas
+      canvas.addEventListener('click', function (event) {
+        // Get the click coordinates relative to the canvas
+        const x = event.offsetX;
+        const y = event.offsetY;
+
+        // Check if the click is inside the launch button rectangle
+        const launchButtonWidth = 150;
+        const launchButtonHeight = 75;
+        const launchButtonX = (canvas.width - launchButtonWidth) / 2;
+        const launchButtonY = 40;
+        if (x >= launchButtonX && x <= launchButtonX + launchButtonWidth && y >= launchButtonY && y <= launchButtonY + launchButtonHeight) {
+          getWordFromServer(); // Trigger the AJAX call to fetch a new word
+        }
+      });
+
+      // Draw launch button initially
+      launchButton();
+
+      movewords(); // Start moving the words
     });
   </script>
   <script src="js/vendor/jquery.min.js" crossorigin="anonymous"></script>
